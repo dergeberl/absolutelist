@@ -1,0 +1,85 @@
+name: golang
+
+on:
+  push:
+    branches:
+      - "*"
+    tags:
+      - 'v*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.7
+      - name: Install golint
+        run: |
+          go get -u golang.org/x/lint/golint
+      - name: Install golint
+        run: |
+          golint -set_exit_status .
+  vet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.7
+      - name: Install golint
+        run: |
+          go vet .
+  gosec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: ./...
+  goreleaser-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.7
+      - name: Check goreleaser config
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: check -f .github/.goreleaser.yaml
+  test:
+    needs: [ lint, vet, gosec ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.7
+      - name: Run go test
+        run: |
+          go test -v .
+  build:
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    needs: [lint, vet, gosec, test, goreleaser-config ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.7
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: release --rm-dist -f .github/.goreleaser.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
