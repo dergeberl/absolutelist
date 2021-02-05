@@ -3,12 +3,12 @@
 Absolutelist is a small tool to get the absolute path of files and folders.  
 I know there are a few other tools that can do this already, but it was a nice small project to code in golang and set up a github-action pipeline for it.
 
-##Installation
+## Installation
 
 Download the binary from the github release and mv it to a folder that is in your path (example /usr/local/bin).   
 Use `chmod +x /path/to/absolutelist` to make it executable.
 
-##Usage
+## Usage
 
 ```
 absolutelist [options] [files]...
@@ -23,7 +23,7 @@ For easy typing you can set an alias like `al`:
 alias al=absolutelist
 ```
 
-##Examples:
+## Examples:
 
 `absolutelist` prints the absolut path of files and directories from the current directory   
 `absolutelist some-dir` prints the absolut path of files and directories in the folder `some-dir`   
