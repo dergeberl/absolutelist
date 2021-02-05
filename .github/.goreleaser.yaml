@@ -5,6 +5,8 @@ archives:
     format: binary
 changelog:
   skip: true
+release:
+  prerelease: auto
 builds:
   - id: "absolutelist"
     env: [CGO_ENABLED=0]
