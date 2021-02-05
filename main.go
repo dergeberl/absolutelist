@@ -143,7 +143,10 @@ func (fl *fileList) checkSingleDir() error {
 		return err
 	}
 	if f.IsDir() {
-		fl.appendDir(fl.files[0].givenPath)
+		err = fl.appendDir(fl.files[0].givenPath)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
