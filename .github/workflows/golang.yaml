@@ -2,11 +2,10 @@ name: golang
 
 on:
   push:
-    branches:
-      - "*"
-    tags:
-      - 'v*'
-
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -15,7 +14,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15.7
+          go-version: 1.15
       - name: Install golint
         run: |
           go get -u golang.org/x/lint/golint
@@ -29,7 +28,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15.7
+          go-version: 1.15
       - name: Install golint
         run: |
           go vet .
@@ -57,15 +56,29 @@ jobs:
   test:
     needs: [ lint, vet, gosec ]
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ['1.11', '1.12', '1.13', '1.14', '1.15']
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Go
-        uses: actions/setup-go@v2
+      - uses: actions/setup-go@v1
         with:
-          go-version: 1.15.7
-      - name: Run go test
-        run: |
-          go test -v .
+          go-version: ${{ matrix.go }}
+      - uses: actions/checkout@v2
+      - run: go test -v -coverprofile=profile.cov ./...
+      - name: Send coverage
+        uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
+          flag-name: Go-${{ matrix.go }}
+          parallel: true
+  coveralls-finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          parallel-finished: true
   build:
     if: success() && startsWith(github.ref, 'refs/tags/')
     needs: [lint, vet, gosec, test, goreleaser-config ]
