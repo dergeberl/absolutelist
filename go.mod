@@ -1,3 +1,3 @@
-module filelist
+module absolutelist
 
 go 1.15
