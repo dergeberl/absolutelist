@@ -242,7 +242,6 @@ func TestPrint(t *testing.T) {
 	})
 }
 
-
 func BenchmarkAppend(b *testing.B) {
 	b.ResetTimer()
 	appendList := []string{"testdir/file0"}
