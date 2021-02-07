@@ -1,5 +1,7 @@
 # Absolutelist
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/dergeberl/absolutelist)](https://goreportcard.com/report/github.com/dergeberl/absolutelist) ![Coveralls github](https://img.shields.io/coveralls/github/dergeberl/absolutelist) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/dergeberl/absolutelist) ![GitHub](https://img.shields.io/github/license/dergeberl/absolutelist) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/dergeberl/absolutelist?include_prereleases)
+
 Absolutelist is a small tool to get the absolute path of files and folders.  
 I know there are a few other tools that can do this already, but it was a nice small project to code in golang and set up a github-action pipeline for it.
 
