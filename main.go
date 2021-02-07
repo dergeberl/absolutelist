@@ -93,7 +93,7 @@ func main() {
 		_, _ = fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-	os.Exit(0)
+	//os.Exit(0)
 }
 
 //append appends the list to fileList

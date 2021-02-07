@@ -8,6 +8,32 @@ import (
 	"testing"
 )
 
+func TestMainFunc(t *testing.T) {
+	t.Run("test main", func(t *testing.T) {
+
+		rIn, wIn, _ := os.Pipe()
+		sIn := os.Stdin
+		os.Stdin = rIn
+		_, _ = wIn.WriteString("testdir/file0")
+		_ = wIn.Close()
+
+		rOut, wOut, _ := os.Pipe()
+		sOut := os.Stdout
+		os.Stdout = wOut
+
+		main()
+
+		_ = wOut.Close()
+		os.Stdin = sIn
+		os.Stdout = sOut
+		output, _ := ioutil.ReadAll(rOut)
+
+		if !strings.HasSuffix(string(output), "testdir/file0\n") {
+			t.Errorf("output did not end with 'testdir/file0': %v", string(output))
+		}
+	})
+}
+
 func TestAppendStdin(t *testing.T) {
 	t.Run("appendStdin file", func(t *testing.T) {
 		var expectFile, gotFile fileList
